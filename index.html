@@ -1,0 +1,895 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>薪火同行 · 朋辈经验共享与互助平台（演示）</title>
+<meta name="description" content="毕业生经验共享与朋辈互助平台的可交互演示。页面内所有姓名、院校与经历均为虚构示例。">
+<style>
+  :root{
+    --ink:#1c2024; --ink-2:#4a5259; --ink-3:#7c868d;
+    --line:#e3e6e8; --line-2:#eef0f2;
+    --bg:#f7f8f9; --card:#ffffff;
+    --brand:#8c2f39; --brand-2:#a8424d; --brand-soft:#fbf3f4;
+    --ok:#2f6f4f; --ok-soft:#eef6f1;
+    --warn:#8a5a1a; --warn-soft:#fdf6ea;
+    --info:#2c5578; --info-soft:#eef3f8;
+    --radius:10px;
+    --shadow:0 1px 2px rgba(28,32,36,.05), 0 4px 14px rgba(28,32,36,.05);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.7; font-size:15px; -webkit-font-smoothing:antialiased;}
+  a{color:var(--brand); text-decoration:none;} a:hover{text-decoration:underline;}
+  .wrap{max-width:1080px; margin:0 auto; padding:0 20px;}
+  header.top{background:var(--card); border-bottom:1px solid var(--line); position:sticky; top:0; z-index:50;}
+  .top-inner{display:flex; align-items:center; gap:18px; height:62px;}
+  .logo{display:flex; align-items:baseline; gap:9px; flex-shrink:0;}
+  .logo b{font-size:19px; letter-spacing:.5px;} .logo span{font-size:12px; color:var(--ink-3);}
+  nav.tabs{display:flex; gap:2px; margin-left:auto; flex-wrap:wrap;}
+  nav.tabs button{border:0; background:transparent; font:inherit; font-size:14px; color:var(--ink-2);
+    padding:8px 12px; border-radius:7px; cursor:pointer; white-space:nowrap;}
+  nav.tabs button:hover{background:var(--line-2);}
+  nav.tabs button.on{background:var(--brand-soft); color:var(--brand); font-weight:600;}
+  .userchip{display:flex; align-items:center; gap:8px; font-size:13px; color:var(--ink-2);
+    padding-left:12px; border-left:1px solid var(--line);}
+  .userchip .tier{font-size:11.5px; padding:2px 8px; border-radius:20px; background:var(--brand-soft); color:var(--brand);}
+  main{padding:26px 0 70px;}
+  section.view{display:none;}
+  section.view.on{display:block; animation:fade .18s ease;}
+  @keyframes fade{from{opacity:0; transform:translateY(3px);} to{opacity:1; transform:none;}}
+  .hero{background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:32px 34px; margin-bottom:22px; box-shadow:var(--shadow); position:relative; overflow:hidden;}
+  .hero:before{content:""; position:absolute; left:0; top:0; bottom:0; width:4px;
+    background:linear-gradient(180deg,var(--brand),var(--brand-2));}
+  .hero h1{margin:0 0 8px; font-size:26px;}
+  .hero .sub{color:var(--ink-2); margin-bottom:16px;}
+  .hero .quote{font-size:15px; border-left:2px solid var(--line); padding-left:14px; margin:16px 0 0;}
+  .hero .quote em{color:var(--ink-3); font-style:normal; font-size:13px; display:block; margin-top:5px;}
+  .card{background:var(--card); border:1px solid var(--line); border-radius:var(--radius);
+    padding:22px 24px; margin-bottom:18px; box-shadow:var(--shadow);}
+  h2.sec{font-size:18px; margin:0 0 4px; display:flex; align-items:center; gap:9px;}
+  h2.sec .n{display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px;
+    border-radius:6px; background:var(--brand); color:#fff; font-size:13px; flex-shrink:0;}
+  p.lead{color:var(--ink-2); margin:6px 0 0;}
+  .hint{font-size:13px; color:var(--ink-3); margin-top:8px;}
+  .grid{display:grid; gap:14px;}
+  .g2{grid-template-columns:repeat(auto-fit,minmax(300px,1fr));}
+  .g3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr));}
+  label.f{display:block; margin:16px 0 0; font-size:14px; font-weight:600;}
+  label.f .req{color:var(--brand); font-weight:400; font-size:12px; margin-left:5px;}
+  label.f .opt{color:var(--ink-3); font-weight:400; font-size:12px; margin-left:5px;}
+  input[type=text],select,textarea{width:100%; font:inherit; font-size:14px; border:1px solid var(--line);
+    border-radius:8px; padding:9px 11px; margin-top:6px; background:#fff;}
+  input:focus,select:focus,textarea:focus{outline:none; border-color:var(--brand-2); box-shadow:0 0 0 3px var(--brand-soft);}
+  textarea{min-height:88px; resize:vertical;}
+  .radios{display:flex; flex-direction:column; gap:9px; margin-top:9px;}
+  .radio{display:flex; gap:11px; align-items:flex-start; padding:12px 14px; border:1px solid var(--line);
+    border-radius:8px; cursor:pointer; background:#fff;}
+  .radio.on{border-color:var(--brand-2); background:var(--brand-soft);}
+  .radio input{margin:4px 0 0; flex-shrink:0;}
+  .radio .t{font-weight:600; font-size:14px;}
+  .radio .d{font-size:13px; color:var(--ink-2); margin-top:2px;}
+  .checks{margin-top:12px; display:flex; flex-direction:column; gap:10px;}
+  .check{display:flex; gap:10px; align-items:flex-start; font-size:13.5px; color:var(--ink-2); cursor:pointer;}
+  .check input{margin:5px 0 0; flex-shrink:0;} .check b{color:var(--ink);}
+  button.btn{font:inherit; font-size:14px; font-weight:600; border-radius:8px; cursor:pointer;
+    padding:10px 20px; border:1px solid transparent;}
+  button.btn.primary{background:var(--brand); color:#fff;}
+  button.btn.primary:hover{background:var(--brand-2);}
+  button.btn.ghost{background:#fff; border-color:var(--line); color:var(--ink-2);}
+  button.btn.ghost:hover{border-color:#cfd4d8; color:var(--ink);}
+  button.btn.danger{background:#8c2f39; color:#fff;}
+  button.btn:disabled{opacity:.45; cursor:not-allowed;}
+  .actions{display:flex; gap:10px; margin-top:22px; flex-wrap:wrap; align-items:center;}
+  .searchbar{display:flex; gap:10px; flex-wrap:wrap; align-items:flex-end;}
+  .searchbar > div{flex:1 1 150px; min-width:130px;}
+  .searchbar label{font-size:12.5px; color:var(--ink-3); display:block; margin-bottom:5px;}
+  .searchbar input,.searchbar select{margin-top:0;}
+  .list{display:grid; gap:12px; margin-top:18px;}
+  .person{border:1px solid var(--line); border-radius:9px; padding:16px 18px; background:#fff; cursor:pointer;}
+  .person:hover{border-color:#cfd4d8; box-shadow:0 2px 10px rgba(28,32,36,.06);}
+  .person .row1{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+  .person .nm{font-weight:700; font-size:15.5px;}
+  .person .meta{font-size:13px; color:var(--ink-3);}
+  .person .msg{margin-top:10px; font-size:14px; color:var(--ink-2);
+    border-left:2px solid var(--line-2); padding-left:12px;}
+  .person .tags{display:flex; gap:6px; flex-wrap:wrap; margin-top:10px;}
+  .tag{font-size:12px; padding:3px 9px; border-radius:20px; background:var(--line-2);
+    color:var(--ink-2); white-space:nowrap;}
+  .tag.brand{background:var(--brand-soft); color:var(--brand);}
+  .tag.ok{background:var(--ok-soft); color:var(--ok);}
+  .tag.info{background:var(--info-soft); color:var(--info);}
+  .tag.warn{background:var(--warn-soft); color:var(--warn);}
+  .tag.no{background:#f2f3f4; color:var(--ink-3);}
+  .note{border-radius:8px; padding:13px 16px; font-size:13.5px; border:1px solid transparent;}
+  .note.info{background:var(--info-soft); border-color:#d8e4ee; color:#254a68;}
+  .note.ok{background:var(--ok-soft); border-color:#d5e7dc; color:#28563e;}
+  .note.warn{background:var(--warn-soft); border-color:#f0e0c4; color:#6f4a13;}
+  .note.brand{background:var(--brand-soft); border-color:#f0dcdf; color:#7a2731;}
+  .note.plain{background:var(--bg); border-color:var(--line); color:var(--ink-2);}
+  .note ul,.note ol{margin:8px 0 0; padding-left:20px;}
+  table.tbl{width:100%; border-collapse:collapse; margin-top:14px; font-size:13.5px;}
+  table.tbl th,table.tbl td{border:1px solid var(--line); padding:9px 11px; text-align:left; vertical-align:top;}
+  table.tbl th{background:#f2f3f4; font-weight:600; font-size:13px;}
+  .kv{display:grid; grid-template-columns:96px 1fr; gap:6px 14px; font-size:14px; margin-top:14px;}
+  .kv dt{color:var(--ink-3); font-size:13px;} .kv dd{margin:0;}
+  .empty{text-align:center; padding:44px 20px; color:var(--ink-3); font-size:14px;}
+  .empty .big{font-size:30px; display:block; margin-bottom:10px; opacity:.4;}
+  dialog{border:0; border-radius:12px; padding:0; max-width:640px; width:calc(100% - 40px);
+    box-shadow:0 20px 60px rgba(28,32,36,.22); color:var(--ink);}
+  dialog::backdrop{background:rgba(28,32,36,.4);}
+  .dlg-hd{padding:20px 24px 14px; border-bottom:1px solid var(--line); display:flex; align-items:center; gap:12px;}
+  .dlg-hd h3{margin:0; font-size:17px;}
+  .dlg-bd{padding:20px 24px; max-height:62vh; overflow:auto;}
+  .dlg-ft{padding:14px 24px 20px; display:flex; gap:10px; justify-content:flex-end;}
+  .x{margin-left:auto; border:0; background:transparent; font-size:20px; color:var(--ink-3); cursor:pointer; line-height:1;}
+  .toast{position:fixed; left:50%; bottom:28px; transform:translateX(-50%) translateY(16px);
+    background:var(--ink); color:#fff; padding:11px 20px; border-radius:9px; font-size:14px;
+    opacity:0; pointer-events:none; transition:all .22s; z-index:200; max-width:calc(100% - 40px);}
+  .toast.on{opacity:1; transform:translateX(-50%);}
+  footer{border-top:1px solid var(--line); background:var(--card); padding:22px 0;
+    font-size:12.5px; color:var(--ink-3); margin-top:40px;}
+  footer .wrap{display:flex; gap:16px; flex-wrap:wrap; align-items:center;}
+  .banner-demo{background:var(--warn-soft); border-bottom:1px solid #f0e0c4; color:#6f4a13;
+    font-size:13px; padding:9px 0; text-align:center;}
+  .banner-demo b{color:#5d3e10;}
+  .loginbox{max-width:460px; margin:50px auto;}
+  .loginbox .card{padding:32px 34px;}
+  .sso-btn{display:block; width:100%; text-align:center; padding:13px; font-size:15px; font-weight:600;
+    background:var(--brand); color:#fff; border-radius:9px; border:0; cursor:pointer;}
+  .sso-btn:hover{background:var(--brand-2);}
+  .mocklist{display:grid; gap:8px; margin-top:10px;}
+  .mocklist button{width:100%; text-align:left; padding:10px 14px; font:inherit; font-size:13.5px;
+    background:#fff; border:1px solid var(--line); border-radius:8px; cursor:pointer; color:var(--ink-2);}
+  .mocklist button:hover{border-color:var(--brand-2); color:var(--brand); background:var(--brand-soft);}
+  @media (max-width:640px){
+    .top-inner{height:auto; padding:10px 0; flex-wrap:wrap;}
+    nav.tabs{margin-left:0; width:100%;}
+    .userchip{border-left:0; padding-left:0; width:100%;}
+    .hero{padding:24px 20px;} .hero h1{font-size:21px;}
+    .card{padding:18px 16px;}
+    .kv{grid-template-columns:1fr; gap:2px 0;}
+  }
+</style>
+</head>
+<body>
+
+<div class="banner-demo">
+  <div class="wrap"><b>功能演示</b> · 页面内所有姓名、院校、单位与经历<strong>均为虚构示例</strong>，不含任何真实个人信息；本页为静态演示，数据不会上传到任何服务器</div>
+</div>
+
+<header class="top">
+  <div class="wrap top-inner">
+    <div class="logo"><b>薪火同行</b><span>朋辈经验共享与互助平台</span></div>
+    <nav class="tabs" id="tabs">
+      <button data-view="home" class="on">首页</button>
+      <button data-view="browse">经验库</button>
+      <button data-view="join">我要参与</button>
+      <button data-view="ask">发起咨询</button>
+      <button data-view="me">我的</button>
+    </nav>
+    <div class="userchip" id="userchip"></div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="view" id="view-login">
+    <div class="loginbox">
+      <div class="card">
+        <h2 class="sec">登录（演示）</h2>
+        <p class="lead">正式部署时，此处跳转<strong>学校统一身份认证</strong>（CAS / OAuth2）。</p>
+        <div class="note plain" style="margin-top:14px">
+          演示环境无法接入学校认证，请从下方选择一个测试身份体验不同层级的权限：
+        </div>
+        <div class="mocklist" id="mocklist">
+          <button data-uid="2022001" data-name="李维" data-major="计算机科学与技术" data-grade="2022级">
+            李维 · 2022级计算机 · <b>贡献者</b>（有经验、接受咨询）</button>
+          <button data-uid="2022005" data-name="陈嘉" data-major="自动化" data-grade="2022级">
+            陈嘉 · 2022级自动化 · <b>贡献者</b>（仅留寄语、不接受咨询）</button>
+          <button data-uid="2024001" data-name="在校同学" data-major="计算机科学与技术" data-grade="2024级">
+            在校同学 · 2024级 · <b>未参与</b>（浏览者视角）</button>
+        </div>
+        <div class="note warn" style="margin-top:16px">
+          <b>注意</b>：演示版<strong>不包含管理端</strong>，也无法读取任何联系方式——
+          这正是正式系统的设计：联系方式不下发到浏览器。
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="view on" id="view-home">
+    <div class="hero">
+      <h1>把你走过的路，留给正在走的人</h1>
+      <div class="sub">2022级毕业生经验沉淀 × 在校同学朋辈互助 · 毕业季启动</div>
+      <div class="note brand" style="margin-top:18px">
+        这不是一份「去向展示榜」，而是一张<strong>经验传承网络</strong>。
+        你可以选择只留下一句话，也可以分享完整经验——参与即可查看他人经验。
+      </div>
+      <div class="quote">“如果你愿意把经验留给后来的人，学院会把这份心意认真收好。”<em>—— 项目组</em></div>
+    </div>
+
+    <div class="grid g3">
+      <div class="card" style="margin:0">
+        <h2 class="sec"><span class="n">1</span>贡献后解锁</h2>
+        <p class="lead">提交你的信息即可查看全部参与者的经验内容。查看权限与贡献挂钩，避免单向索取。</p>
+      </div>
+      <div class="card" style="margin:0">
+        <h2 class="sec"><span class="n">2</span>联系方式不公开</h2>
+        <p class="lead">平台<strong>不收集</strong>手机号与微信号，咨询由管理员单向中转。</p>
+      </div>
+      <div class="card" style="margin:0">
+        <h2 class="sec"><span class="n">3</span>随时可退出</h2>
+        <p class="lead">可随时暂停接受咨询、撤回并删除全部数据，无需说明理由。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="sec">当前参与情况</h2>
+      <div class="grid g3" style="margin-top:14px">
+        <div><div style="font-size:26px;font-weight:700;color:var(--brand)" id="stat-p">—</div><div class="hint" style="margin:0">已参与人数</div></div>
+        <div><div style="font-size:26px;font-weight:700;color:var(--brand)" id="stat-e">—</div><div class="hint" style="margin:0">经验条目</div></div>
+        <div><div style="font-size:26px;font-weight:700;color:var(--brand)" id="stat-h">—</div><div class="hint" style="margin:0">已完成对接</div></div>
+      </div>
+      <p class="hint">平台不公布任何按院校或单位排序的统计。</p>
+    </div>
+
+    <div class="card">
+      <h2 class="sec">三层权限一览</h2>
+      <table class="tbl">
+        <thead><tr><th style="width:110px">层级</th><th style="width:150px">对象</th><th>可见内容</th><th style="width:180px">获取条件</th></tr></thead>
+        <tbody>
+          <tr><td><span class="tag brand">贡献者</span></td><td>毕业年级同学</td><td>经验库全部内容<br>可发起联系请求</td><td>提交信息表 + 签署共享承诺</td></tr>
+          <tr><td><span class="tag info">同行者</span></td><td>在校低年级同学</td><td>经验库全部内容<br>可发起联系请求</td><td>同样提交信息表</td></tr>
+          <tr><td><span class="tag no">浏览者</span></td><td>未参与者</td><td>仅公开寄语（不含去向与联系方式）</td><td>登录后即可查看</td></tr>
+        </tbody>
+      </table>
+      <p class="hint">低年级同学也需要填写信息——这让关系从「单向索取」变成「双向同行」。</p>
+    </div>
+
+    <div class="card">
+      <h2 class="sec">关于隐私保护的设计</h2>
+      <table class="tbl">
+        <thead><tr><th style="width:150px">措施</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td>不收集联系方式</td><td>平台<strong>没有</strong>手机号与微信号字段，从源头消除泄漏可能</td></tr>
+          <tr><td>单向中转</td><td>咨询由管理员转达问题内容，<strong>不附带申请人联系方式</strong>；双方都同意后才安排对接</td></tr>
+          <tr><td>存储分离</td><td>正式版中联系方式与公开数据<strong>分开加密存储</strong>，查看端永远拿不到</td></tr>
+          <tr><td>读取留痕</td><td>管理员每次读取联系方式都会写入审计日志</td></tr>
+          <tr><td>频次上限</td><td>每人每学期可接收的咨询次数由本人设定，超出自动拦截</td></tr>
+          <tr><td>随时退出</td><td>可一键暂停接受咨询、撤回并删除全部信息</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="view" id="view-browse">
+    <div class="card">
+      <h2 class="sec"><span class="n">2</span>经验库</h2>
+      <p class="lead">按专业方向、去向类型与关键词检索。联系方式永不出现在列表中。</p>
+      <div class="note" id="tier-note" style="margin-top:16px"></div>
+      <div class="searchbar" style="margin-top:18px">
+        <div style="flex:2 1 220px"><label>关键词（专业 / 目标院校 / 行业 / 经验内容）</label>
+          <input type="text" id="q" placeholder="例如：计算机、复试、调剂"></div>
+        <div><label>去向类型</label><select id="f-dest"><option value="">不限</option></select></div>
+        <div><label>专业方向</label><select id="f-major"><option value="">不限</option></select></div>
+        <div><label>是否接受咨询</label><select id="f-open"><option value="">不限</option><option value="1">仅显示可咨询</option></select></div>
+        <div style="flex:0 0 auto"><button class="btn ghost" id="btn-reset">重置</button></div>
+      </div>
+      <div class="list" id="list"></div>
+      <div id="list-empty" class="empty" style="display:none"><span class="big">◌</span>没有符合条件的记录</div>
+    </div>
+  </section>
+
+  <section class="view" id="view-join">
+    <div class="card">
+      <h2 class="sec"><span class="n">3</span>我要参与</h2>
+      <p class="lead">5 分钟内可完成。必填项只有 4 个，其余全部选填。</p>
+      <div class="note ok" style="margin-top:16px">
+        <b>提交后你将获得查看权限</b>，可查看经验库全部内容并申请咨询。
+        平台<strong>不会收集</strong>你的手机号或微信号。
+      </div>
+      <form id="join-form" autocomplete="off">
+        <label class="f">选择参与模式 <span class="req">必填</span></label>
+        <div class="radios" id="mode-radios">
+          <label class="radio on"><input type="radio" name="mode" value="full" checked>
+            <span><span class="t">完整共享</span><span class="d">分享去向、经验与寄语，愿意接受咨询（经中转）</span></span></label>
+          <label class="radio"><input type="radio" name="mode" value="msg">
+            <span><span class="t">仅留寄语</span><span class="d">只写一段想对学弟学妹说的话，不公开去向——<strong>同样计入贡献者，同样获得全部查看权限</strong></span></span></label>
+          <label class="radio"><input type="radio" name="mode" value="anon">
+            <span><span class="t">匿名投稿</span><span class="d">以匿名署名分享经验，联系方式由学院中转</span></span></label>
+        </div>
+
+        <label class="f" id="lb-name">姓名或署名 <span class="req">必填</span></label>
+        <input type="text" id="in-name" placeholder="真实姓名，或自定义署名">
+
+        <div class="grid g2">
+          <div><label class="f">年级 <span class="req">必填</span></label>
+            <select id="in-grade">
+              <option value="2022级">2022级（毕业年级）</option>
+              <option value="2023级">2023级</option>
+              <option value="2024级">2024级</option>
+              <option value="2025级">2025级</option>
+              <option value="其他">其他</option>
+            </select></div>
+          <div><label class="f">专业 <span class="req">必填</span></label><select id="in-major"></select></div>
+        </div>
+
+        <label class="f">去向类型 <span class="opt">仅「完整共享」必填</span></label>
+        <select id="in-dest"></select>
+        <p class="hint">即使完全不填去向，选择「仅留寄语」同样可以参与。</p>
+
+        <label class="f">具体院校 / 单位 <span class="opt">选填</span></label>
+        <input type="text" id="in-org" placeholder="可留空；不愿公开可填「暂不公开」">
+
+        <label class="f">经验内容 <span class="opt">选填，但很受欢迎</span></label>
+        <textarea id="in-exp" placeholder="例如：复试问到哪类问题、哪一步最关键、踩过哪些坑……"></textarea>
+
+        <label class="f">想对学弟学妹说的话 <span class="opt">选填</span></label>
+        <textarea id="in-msg" style="min-height:70px" placeholder="一句话也可以，例如：别怕慢，怕停。"></textarea>
+
+        <label class="f">是否接受咨询 <span class="req">必填</span></label>
+        <div class="radios" id="ask-radios">
+          <label class="radio on"><input type="radio" name="ask" value="yes" checked>
+            <span><span class="t">接受，但请由学院中转</span><span class="d">学弟学妹提交问题，管理员转达给你，你的联系方式不暴露</span></span></label>
+          <label class="radio"><input type="radio" name="ask" value="no">
+            <span><span class="t">暂不接受咨询</span><span class="d">仅分享经验——不影响你查看他人经验</span></span></label>
+        </div>
+
+        <div class="grid g2" id="relay-opts">
+          <div><label class="f">可接受的咨询频次 <span class="opt">选填</span></label>
+            <select id="in-freq">
+              <option value="每学期不超过3次">每学期不超过3次</option>
+              <option value="每学期不超过5次" selected>每学期不超过5次</option>
+              <option value="每学期不超过10次">每学期不超过10次</option>
+            </select></div>
+          <div><label class="f">可接受的联系时段 <span class="opt">选填</span></label>
+            <select id="in-time">
+              <option value="仅工作日白天">仅工作日白天</option>
+              <option value="仅工作日晚上">仅工作日晚上</option>
+              <option value="周末">周末</option>
+              <option value="不接受深夜联系（22:00后）" selected>不接受深夜联系（22:00后）</option>
+            </select></div>
+        </div>
+
+        <label class="f">知情同意 <span class="req">必填</span></label>
+        <div class="checks">
+          <label class="check"><input type="checkbox" id="ck-1"><span>我已阅读并同意<b>《信息收集告知与授权书》</b>，信息仅用于本项目内的朋辈咨询与经验分享，不用于商业、评选或其他用途。</span></label>
+          <label class="check"><input type="checkbox" id="ck-2"><span>我知悉平台<b>不收集手机号与微信号</b>；咨询请求由管理员中转，我可随时暂停或退出。</span></label>
+          <label class="check"><input type="checkbox" id="ck-3"><span>我知悉信息默认保存至<b>毕业后 3 年</b>，到期自动清理；我可随时要求删除全部信息。</span></label>
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="btn primary">提交并获取查看权限</button>
+          <button type="button" class="btn ghost" id="btn-join-reset">清空重填</button>
+        </div>
+        <p class="hint">演示版：提交的数据仅保存在你的浏览器内存中，刷新页面即消失，不会发送到任何服务器。</p>
+      </form>
+    </div>
+  </section>
+
+  <section class="view" id="view-ask">
+    <div class="card">
+      <h2 class="sec"><span class="n">4</span>发起咨询</h2>
+      <p class="lead">通过管理员单向中转，双方联系方式都不暴露，直到彼此都愿意。</p>
+      <div id="ask-body"></div>
+    </div>
+  </section>
+
+  <section class="view" id="view-me">
+    <div class="card">
+      <h2 class="sec"><span class="n">5</span>我的</h2>
+      <div id="me-body"></div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>薪火同行 · 朋辈经验共享与互助平台（功能演示）</span>
+    <span style="margin-left:auto">四条底线：不排名 · 不公开联系方式 · 贡献后解锁 · 随时可退出</span>
+  </div>
+</footer>
+
+<dialog id="dlg">
+  <div class="dlg-hd"><h3 id="dlg-title"></h3><button class="x" id="dlg-x">×</button></div>
+  <div class="dlg-bd" id="dlg-bd"></div>
+  <div class="dlg-ft" id="dlg-ft"></div>
+</dialog>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ===========================================================================
+   薪火同行 · 静态演示版  (demo-fictional-data)
+   本文件不连接任何服务器：数据全部为虚构示例 (fictional sample records)，
+   仅存在于当前页面内存中，刷新即消失。
+   正式版本使用服务端进行身份认证、权限判定与联系方式隔离存储。
+   =========================================================================== */
+
+const MAJORS = ['计算机科学与技术','软件工程','电子信息工程','通信工程','自动化','机械工程','材料科学与工程','临床医学','经济学','工商管理','法学','汉语言文学'];
+const DESTS  = ['国内升学','境外升学','企业就业','考公考编','创业 / 自由职业','暂未确定'];
+
+/* ---------- 虚构示例数据（不含任何真实个人信息） ---------- */
+const SEED = [
+  { id:'g1', name:'李维', grade:'2022级', major:'计算机科学与技术', dest:'国内升学', org:'XX大学 计算机学院',
+    exp:'复试最看重的是项目经历能否讲清楚。我被问到「这个系统的瓶颈在哪、你怎么发现的」，答得具体才有分。建议把简历上每个项目的技术选型理由都想一遍。',
+    msg:'别怕慢，怕停。', mode:'full', ask:true, freq:'每学期不超过5次', time:'不接受深夜联系（22:00后）', requests:2 },
+
+  { id:'g2', name:'匿名学姐', grade:'2022级', major:'软件工程', dest:'企业就业', org:'',
+    exp:'秋招提前批比正式批好拿 offer。我投了 30 多家，最后拿到的是 8 月就开始投的那几家。简历一页就够，把最有把握的项目放最上面。',
+    msg:'投递是一场概率游戏，别把一次拒绝当成对自己的判断。', mode:'anon', ask:true, freq:'每学期不超过3次', time:'仅工作日晚上', requests:1 },
+
+  { id:'g3', name:'张昊', grade:'2022级', major:'电子信息工程', dest:'国内升学', org:'XX大学 电子系',
+    exp:'保研的关键是前五学期的绩点，大三下再努力已经晚了。夏令营要海投，我从 6 月开始投了 12 所，进了 5 个营。英语面试不要背模板，会被听出来。',
+    msg:'早点开始，晚点焦虑。', mode:'full', ask:true, freq:'每学期不超过5次', time:'仅工作日白天', requests:3 },
+
+  { id:'g4', name:'王雨桐', grade:'2022级', major:'临床医学', dest:'国内升学', org:'XX医科大学',
+    exp:'医学考研的难点在西综，建议 3 月就开始第一轮。实习和复习会冲突，我的做法是把夜班后的白天整块时间留给西综，碎片时间背单词和政治。',
+    msg:'这条路很长，但你不是一个人走。', mode:'full', ask:true, freq:'每学期不超过5次', time:'周末', requests:0 },
+
+  { id:'g5', name:'陈嘉', grade:'2022级', major:'自动化', dest:'考公考编', org:'某省直单位',
+    exp:'选调生和省考可以同时准备，行测的模块化训练比刷整套卷更有效。申论别只看范文，要自己动手写完整篇再对照修改，这一步最容易被跳过。',
+    msg:'稳定不是妥协，是另一种选择。', mode:'msg', ask:false, freq:'', time:'', requests:0 },
+
+  { id:'g6', name:'匿名学长', grade:'2022级', major:'机械工程', dest:'境外升学', org:'',
+    exp:'语言成绩要早考，我拖到大四上才考完，导致选校范围被压缩。文书不要写「我从小热爱机械」，写你做过的一个具体决定和它带来的结果。',
+    msg:'申请季很长，把节奏掌握在自己手里。', mode:'anon', ask:true, freq:'每学期不超过10次', time:'仅工作日晚上', requests:1 },
+
+  { id:'g7', name:'刘思远', grade:'2022级', major:'经济学', dest:'企业就业', org:'XX咨询',
+    exp:'咨询和投行的面试都是 case 为主，建议找同学组队练，一周练三次。自我介绍控制在 90 秒，讲一个贯穿你大学生活的主线，别罗列经历。',
+    msg:'你不需要完美，你需要被记住。', mode:'full', ask:true, freq:'每学期不超过5次', time:'仅工作日晚上', requests:2 },
+
+  { id:'g8', name:'赵敏', grade:'2022级', major:'材料科学与工程', dest:'国内升学', org:'XX大学 材料学院',
+    exp:'材料专业考研竞争相对缓和，但导师的选择比学校更重要。建议提前看导师近三年的论文，发邮件时能提到具体工作，回复率会高很多。',
+    msg:'选导师这件事，值得你花两周时间。', mode:'full', ask:true, freq:'每学期不超过3次', time:'不接受深夜联系（22:00后）', requests:0 }
+];
+
+let DB = null;
+let ME = null;      // { uid, name, tier }
+let myRequests = [];
+
+function resetDB(){
+  DB = { people: JSON.parse(JSON.stringify(SEED)), handled: 2 };
+  ME = null; myRequests = [];
+}
+
+/* ---------- 工具 ---------- */
+const $  = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
+function esc(s){
+  return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function toast(m){
+  const t = $('#toast'); t.textContent = m; t.classList.add('on');
+  clearTimeout(t._h); t._h = setTimeout(()=>t.classList.remove('on'), 2400);
+}
+function openDlg(title, body, foot){
+  $('#dlg-title').textContent = title;
+  $('#dlg-bd').innerHTML = body;
+  $('#dlg-ft').innerHTML = foot || '<button class="btn ghost" id="dlg-close">关闭</button>';
+  $('#dlg').showModal();
+  const c = $('#dlg-close'); if(c) c.onclick = ()=> $('#dlg').close();
+}
+$('#dlg-x').onclick = ()=> $('#dlg').close();
+
+function tier(){ return ME ? ME.tier : 'guest'; }
+function tierLabel(){
+  if(!ME) return '未登录';
+  if(ME.tier === 'contributor') return '贡献者（毕业年级）';
+  if(ME.tier === 'peer') return '同行者（在校同学）';
+  if(ME.tier === 'none') return '已登录 · 未参与';
+  return '浏览者';
+}
+function canSeeFull(){ const t = tier(); return t==='contributor' || t==='peer'; }
+
+/* ---------- 路由 ---------- */
+function go(view){
+  const needLogin = ['browse','join','ask','me'];
+  if(!ME && needLogin.indexOf(view) >= 0) view = 'login';
+  if(ME && view === 'login') view = 'home';
+  $$('.view').forEach(v => v.classList.toggle('on', v.id === 'view-'+view));
+  $$('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.view === view));
+  window.scrollTo({top:0, behavior:'smooth'});
+  if(view==='browse') renderBrowse();
+  if(view==='ask')    renderAsk();
+  if(view==='me')     renderMe();
+  if(view==='home')   renderHome();
+  if(view==='login')  paintChip();
+}
+$('#tabs').addEventListener('click', e=>{
+  const b = e.target.closest('button[data-view]');
+  if(b) go(b.dataset.view);
+});
+
+function paintChip(){
+  const chip = $('#userchip');
+  if(ME){
+    chip.innerHTML = `<span>${esc(ME.name)}</span><span class="tier">${esc(tierLabel())}</span>` +
+      `<button class="btn ghost" id="btn-logout" style="padding:4px 10px;font-size:12.5px">退出</button>`;
+    $('#btn-logout').onclick = ()=>{ ME = null; myRequests = []; toast('已退出（演示）'); go('login'); };
+  } else {
+    chip.innerHTML = '<span>未登录</span>';
+  }
+}
+
+/* ---------- 首页 ---------- */
+function renderHome(){
+  $('#stat-p').textContent = DB.people.length;
+  $('#stat-e').textContent = DB.people.filter(p => (p.exp||'').trim()).length;
+  $('#stat-h').textContent = DB.handled || 0;
+}
+
+/* ---------- 登录 ---------- */
+$$('#mocklist button').forEach(b=>{
+  b.onclick = ()=>{
+    const grade = b.dataset.grade;
+    ME = {
+      uid: b.dataset.uid,
+      name: b.dataset.name,
+      tier: grade === '2022级' ? 'contributor' : 'peer'
+    };
+    // 在校同学示例：默认未参与，用于体验浏览者视角
+    if(b.dataset.uid === '2024001'){ ME.tier = 'none'; }
+    paintChip();
+    toast('已登录：' + ME.name + ' · ' + tierLabel());
+    go('home');
+  };
+});
+
+/* ---------- 经验库 ---------- */
+function initFilters(){
+  const fd = $('#f-dest'), fm = $('#f-major');
+  DESTS.forEach(d => fd.insertAdjacentHTML('beforeend', `<option value="${esc(d)}">${esc(d)}</option>`));
+  MAJORS.forEach(m => fm.insertAdjacentHTML('beforeend', `<option value="${esc(m)}">${esc(m)}</option>`));
+  const jm = $('#in-major'); MAJORS.forEach(m => jm.insertAdjacentHTML('beforeend', `<option value="${esc(m)}">${esc(m)}</option>`));
+  const jd = $('#in-dest'); jd.insertAdjacentHTML('beforeend','<option value="">暂不填写</option>');
+  DESTS.forEach(d => jd.insertAdjacentHTML('beforeend', `<option value="${esc(d)}">${esc(d)}</option>`));
+}
+
+function matchPerson(p, q, dest, major, onlyOpen){
+  if(dest && p.dest !== dest) return false;
+  if(major && p.major !== major) return false;
+  if(onlyOpen==='1' && !p.ask) return false;
+  if(q){
+    const hay = (canSeeFull()
+      ? [p.name,p.major,p.dest,p.org,p.exp,p.msg]
+      : [p.major,p.msg]).join(' ').toLowerCase();
+    if(hay.indexOf(q.toLowerCase()) < 0) return false;
+  }
+  return true;
+}
+
+function renderBrowse(){
+  const note = $('#tier-note');
+  if(canSeeFull()){
+    note.className = 'note ok';
+    note.innerHTML = `当前身份：<b>${esc(tierLabel())}</b>。你可以查看全部经验内容并申请咨询。联系方式仍然不在此页面显示。`;
+  } else {
+    note.className = 'note warn';
+    note.innerHTML = `当前身份：<b>${esc(tierLabel())}</b>。你目前只能看到<strong>公开寄语</strong>。` +
+      `去向与经验内容需要先填写信息表后解锁——只留一句寄语同样可以解锁。`;
+  }
+
+  const q = $('#q').value.trim();
+  const list = DB.people.filter(p =>
+    matchPerson(p, q, $('#f-dest').value, $('#f-major').value, $('#f-open').value));
+
+  $('#list').innerHTML = list.map(p=>{
+    const destTag = p.dest ? `<span class="tag brand">${esc(p.dest)}</span>` : `<span class="tag no">未填写去向</span>`;
+    const askTag  = p.ask ? `<span class="tag ok">可咨询</span>` : `<span class="tag no">暂不接受咨询</span>`;
+    const modeTag = p.mode==='anon' ? `<span class="tag info">匿名投稿</span>`
+                  : (p.mode==='msg' ? `<span class="tag info">仅寄语</span>` : '');
+    return `<div class="person" data-id="${esc(p.id)}">
+      <div class="row1">
+        <span class="nm">${esc(p.name)}</span>
+        <span class="meta">${esc(p.grade)} · ${esc(p.major)}</span>
+        ${destTag}${askTag}${modeTag}
+      </div>
+      ${ canSeeFull()
+          ? `<div class="msg">${esc((p.exp||'').slice(0,110))}${(p.exp||'').length>110?'…':''}</div>`
+          : `<div class="msg" style="color:var(--ink-3)">经验内容需参与后可见</div>` }
+      ${ p.msg ? `<div class="msg" style="border-color:var(--brand-soft)">“${esc(p.msg)}”</div>` : '' }
+    </div>`;
+  }).join('');
+  $('#list-empty').style.display = list.length ? 'none' : 'block';
+
+  $('#list').onclick = e=>{
+    const el = e.target.closest('.person');
+    if(el) showPerson(el.dataset.id);
+  };
+}
+
+function showPerson(id){
+  const p = DB.people.find(x => x.id === id);
+  if(!p) return;
+  const full = canSeeFull();
+
+  let body = `<dl class="kv">
+      <dt>年级</dt><dd>${esc(p.grade)}</dd>
+      <dt>专业</dt><dd>${esc(p.major)}</dd>
+      <dt>去向类型</dt><dd>${p.dest?esc(p.dest):'未填写'}</dd>
+      <dt>院校/单位</dt><dd>${ full ? (p.org ? esc(p.org) : '<span class="tag no">本人选择不公开</span>') : '<span class="tag no">参与后可见</span>' }</dd>
+      <dt>参与模式</dt><dd>${p.mode==='anon'?'匿名投稿':(p.mode==='msg'?'仅留寄语':'完整共享')}</dd>
+      <dt>接受咨询</dt><dd>${p.ask?('是 · '+esc(p.freq||'')+(p.time?' · '+esc(p.time):'')):'否，仅分享经验'}</dd>
+    </dl>`;
+
+  if(full){
+    body += `<h4 style="margin:20px 0 6px;font-size:14px">经验内容</h4>
+      <div class="note info">${p.exp?esc(p.exp):'<span style="color:var(--ink-3)">本人未填写经验内容</span>'}</div>`;
+  } else {
+    body += `<div class="note warn" style="margin-top:18px">经验内容需要参与后查看。填写信息表即可解锁（只留一句寄语也算参与）。</div>`;
+  }
+  if(p.msg) body += `<h4 style="margin:20px 0 6px;font-size:14px">想对学弟学妹说</h4><div class="note brand">“${esc(p.msg)}”</div>`;
+
+  body += `<div class="note plain" style="margin-top:18px"><b>联系方式不会在此页面出现。</b>
+    正式版中，平台不存储手机号与微信号；如需联系请提交咨询申请，由管理员中转。
+    <br>（演示版不包含管理端与联系方式功能）</div>`;
+
+  let foot = '<button class="btn ghost" id="dlg-close">关闭</button>';
+  if(full && p.ask) foot = `<button class="btn primary" id="d-ask">发起咨询申请</button>` + foot;
+
+  openDlg(p.name + ' · 经验详情', body, foot);
+  const a = $('#d-ask');
+  if(a) a.onclick = ()=>{ $('#dlg').close(); pendingTarget = id; go('ask'); };
+}
+
+/* ---------- 参与表单 ---------- */
+function initJoin(){
+  $$('#mode-radios .radio').forEach(r=>{
+    r.addEventListener('click', ()=>{
+      $$('#mode-radios .radio').forEach(x=>x.classList.remove('on'));
+      r.classList.add('on'); r.querySelector('input').checked = true; syncMode();
+    });
+  });
+  $$('#ask-radios .radio').forEach(r=>{
+    r.addEventListener('click', ()=>{
+      $$('#ask-radios .radio').forEach(x=>x.classList.remove('on'));
+      r.classList.add('on'); r.querySelector('input').checked = true; syncAsk();
+    });
+  });
+  syncMode(); syncAsk();
+
+  $('#btn-join-reset').onclick = ()=>{
+    $('#join-form').reset();
+    $$('#mode-radios .radio').forEach((x,i)=>x.classList.toggle('on', i===0));
+    $$('#ask-radios .radio').forEach((x,i)=>x.classList.toggle('on', i===0));
+    syncMode(); syncAsk();
+  };
+  $('#join-form').addEventListener('submit', e=>{ e.preventDefault(); submitJoin(); });
+}
+function curMode(){ const r = $('#mode-radios input:checked'); return r?r.value:'full'; }
+function curAsk(){ const r = $('#ask-radios input:checked'); return r && r.value==='yes'; }
+function syncMode(){
+  const m = curMode(), msg = m === 'msg';
+  $('#lb-name').innerHTML = m==='anon'
+    ? '署名 <span class="opt">选填，留空记为「匿名同学」</span>'
+    : '姓名或署名 <span class="req">必填</span>';
+  $('#in-org').disabled = msg;
+  $('#in-org').placeholder = msg ? '「仅留寄语」模式不收集去向信息' : '可留空；不愿公开可填「暂不公开」';
+}
+function syncAsk(){ $('#relay-opts').style.display = curAsk() ? '' : 'none'; }
+
+function submitJoin(){
+  const mode = curMode();
+  const name = $('#in-name').value.trim();
+  const grade = $('#in-grade').value;
+  const major = $('#in-major').value;
+  const dest = mode==='msg' ? '' : $('#in-dest').value;
+  const org  = mode==='msg' ? '' : $('#in-org').value.trim();
+  const exp  = $('#in-exp').value.trim();
+  const msg  = $('#in-msg').value.trim();
+  const ask  = curAsk();
+
+  if(mode!=='anon' && !name) return toast('请填写姓名或署名');
+  if(mode==='full' && !dest) return toast('「完整共享」请选择去向类型，或改为「仅留寄语」');
+  if(!$('#ck-1').checked || !$('#ck-2').checked || !$('#ck-3').checked) return toast('请勾选全部三项知情同意');
+  if(mode!=='msg' && !exp && !msg) return toast('经验内容与寄语至少填写一项');
+
+  const p = {
+    id: 'me_' + Date.now(),
+    name: mode==='anon' ? (name || '匿名同学') : name,
+    grade, major, dest, org, exp, msg, ask,
+    freq: ask ? $('#in-freq').value : '',
+    time: ask ? $('#in-time').value : '',
+    mode, requests: 0, mine: true
+  };
+  DB.people.unshift(p);
+  ME = { uid: 'me', name: p.name, tier: grade === '2022级' ? 'contributor' : 'peer' };
+  paintChip(); renderHome();
+
+  openDlg('提交成功（演示）', `
+    <div class="note ok">你现在是 <b>${esc(tierLabel())}</b>，可以查看经验库全部内容并申请咨询。</div>
+    <div class="note plain" style="margin-top:14px">
+      <b>正式版本在这里会做什么？</b>
+      <ul>
+        <li>信息写入服务端数据库，并按层级控制可见范围。</li>
+        <li>如你填写了联系方式，会被<strong>单独加密保存</strong>，不出现在经验库中。</li>
+        <li>管理员读取联系方式时<strong>每次都会记入审计日志</strong>。</li>
+        <li>你可以随时暂停接受咨询、撤回并删除全部信息。</li>
+      </ul>
+      <b>演示版的区别</b>：数据只保存在当前页面内存中，刷新即消失，不会上传到任何服务器。
+    </div>`,
+    '<button class="btn primary" id="dlg-go">去经验库看看</button><button class="btn ghost" id="dlg-close">留在本页</button>');
+  const g = $('#dlg-go'); if(g) g.onclick = ()=>{ $('#dlg').close(); go('browse'); };
+  const c = $('#dlg-close'); if(c) c.onclick = ()=> $('#dlg').close();
+}
+
+/* ---------- 咨询 ---------- */
+let pendingTarget = null;
+
+function renderAsk(){
+  const box = $('#ask-body');
+  if(!canSeeFull()){
+    box.innerHTML = `<div class="note warn">发起咨询需要先参与项目——填写信息表后即可获得咨询权限（只留一句寄语也算参与）。</div>
+      <div class="actions"><button class="btn primary" id="a-join">去填写信息表</button></div>`;
+    $('#a-join').onclick = ()=> go('join');
+    return;
+  }
+  const open = DB.people.filter(p => p.ask);
+  if(!open.length){
+    box.innerHTML = `<div class="empty"><span class="big">◌</span>当前没有开放咨询的参与者</div>`;
+    return;
+  }
+  const opts = open.map(p=>`<option value="${esc(p.id)}" ${pendingTarget===p.id?'selected':''}>${esc(p.name)} · ${esc(p.major)}${p.dest?' · '+esc(p.dest):''}</option>`).join('');
+
+  box.innerHTML = `
+    <div class="note info">你已发起 <b>${myRequests.length}</b> 次咨询申请。每位参与者每学期可接收的咨询次数由本人设定，超出后由管理员征询本人意愿。</div>
+    <label class="f">咨询对象 <span class="req">必填</span></label>
+    <select id="ask-to">${opts}</select>
+    <label class="f">你的身份 <span class="req">必填</span></label>
+    <div class="grid g2">
+      <div><input type="text" id="ask-name" placeholder="你的姓名" value="${esc(ME?ME.name:'')}"></div>
+      <div><input type="text" id="ask-major" placeholder="专业与年级，如：计算机 2024级"></div>
+    </div>
+    <label class="f">想问的具体问题 <span class="req">必填</span></label>
+    <textarea id="ask-q" placeholder="请写具体一些，例如：我是2024级计算机专业，想考XX大学，目前绩点3.6，想了解复试中项目经历该如何准备。"></textarea>
+    <p class="hint">正式版中，管理员会转达你的问题，但<strong>不会把你的联系方式一并转达</strong>。</p>
+    <div class="checks">
+      <label class="check"><input type="checkbox" id="ak-1"><span>我承诺咨询内容仅用于个人升学/求职参考，<b>不截图外传、不用于商业用途、不打扰对方正常生活</b>。</span></label>
+      <label class="check"><input type="checkbox" id="ak-2"><span>我知悉若发生骚扰或不当行为，我的参与资格会被取消。</span></label>
+    </div>
+    <div class="actions"><button class="btn primary" id="btn-ask">提交咨询申请</button></div>
+    <div class="note plain" style="margin-top:20px">
+      <b>中转流程</b>
+      <ol><li>你提交申请</li><li>管理员核对频次与内容</li><li>转达给学长学姐</li>
+      <li>对方同意并回复</li><li>管理员把回复转达给你</li><li>双方都愿意时才交换联系方式</li></ol>
+    </div>`;
+
+  $('#btn-ask').onclick = ()=>{
+    const toId = $('#ask-to').value;
+    const nm = $('#ask-name').value.trim();
+    const mj = $('#ask-major').value.trim();
+    const q  = $('#ask-q').value.trim();
+    if(!nm || !mj || !q) return toast('请填写你的身份与具体问题');
+    if(!$('#ak-1').checked || !$('#ak-2').checked) return toast('请勾选两项承诺');
+
+    const target = DB.people.find(p => p.id === toId);
+    const cap = parseInt(String(target.freq||'').replace(/[^0-9]/g,''),10) || 5;
+    if((target.requests||0) >= cap){
+      openDlg('已达本学期限额', `<div class="note warn">
+        该同学的咨询额度（${esc(target.freq)}）已用完。管理员会征询本人是否愿意继续，请稍后再试或选择其他同学。
+        <br><br><b>这正是「频次上限」机制的作用</b>：避免善意被透支。</div>`);
+      return;
+    }
+    target.requests = (target.requests||0) + 1;
+    myRequests.push({ to: target.name, q: q, status: '待管理员转达' });
+
+    openDlg('咨询申请已提交（演示）', `
+      <div class="note ok">正式版中，管理员会在 <b>3 个工作日</b>内核对并转达，你可在「我的」查看进度。</div>
+      <div class="note plain" style="margin-top:14px">
+        <b>隐私说明</b>
+        <ul><li>本次转达<strong>不包含</strong>你的联系方式。</li>
+        <li>对方回复后，管理员会把内容转达给你。</li>
+        <li>只有双方都同意时，才会安排交换联系方式。</li></ul>
+      </div>`,
+      '<button class="btn primary" id="dlg-go2">查看进度</button><button class="btn ghost" id="dlg-close">知道了</button>');
+    const g = $('#dlg-go2'); if(g) g.onclick = ()=>{ $('#dlg').close(); go('me'); };
+    const c = $('#dlg-close'); if(c) c.onclick = ()=> $('#dlg').close();
+  };
+}
+
+/* ---------- 我的 ---------- */
+function renderMe(){
+  const box = $('#me-body');
+  const p = DB.people.find(x => x.mine);
+
+  if(!p){
+    box.innerHTML = `
+      <div class="note warn">你目前已登录，但<b>尚未参与</b>，只能查看公开寄语。填写信息表后可解锁全部内容。</div>
+      <div class="actions"><button class="btn primary" id="m-join">去填写信息表</button></div>`;
+    $('#m-join').onclick = ()=> go('join');
+    return;
+  }
+
+  box.innerHTML = `
+    <div class="note ok">当前身份：<b>${esc(tierLabel())}</b></div>
+    <h4 style="margin:22px 0 0;font-size:15px">我的信息</h4>
+    <dl class="kv">
+      <dt>署名</dt><dd>${esc(p.name)}</dd>
+      <dt>年级</dt><dd>${esc(p.grade)}</dd>
+      <dt>专业</dt><dd>${esc(p.major)}</dd>
+      <dt>去向</dt><dd>${p.dest?esc(p.dest):'未填写'}</dd>
+      <dt>接受咨询</dt><dd>${p.ask?'是':'否'}</dd>
+      <dt>已接收咨询</dt><dd>${esc(p.requests||0)} 次</dd>
+    </dl>
+    <h4 style="margin:24px 0 0;font-size:15px">隐私与访问控制</h4>
+    <div class="note plain" style="margin-top:12px">
+      <b>正式版中，平台未在公开数据里存储你的联系方式。</b>
+      如你填写过，它会被单独加密保存，仅管理员在处理你同意的对接时读取，且每次读取都写审计日志。
+      <br><b>演示版不收集任何联系方式。</b>
+    </div>
+    <div class="actions">
+      <button class="btn ghost" id="btn-pause">${p.ask?'暂停接受咨询':'恢复接受咨询'}</button>
+      <button class="btn ghost" id="btn-export">导出我的数据</button>
+      <button class="btn ghost" id="btn-report">我要举报</button>
+      <button class="btn danger" id="btn-delete">撤回并删除全部信息</button>
+    </div>
+    <h4 style="margin:26px 0 0;font-size:15px">我发起的咨询</h4>
+    ${ myRequests.length ? `<table class="tbl"><thead><tr><th style="width:130px">对象</th><th>问题</th><th style="width:150px">状态</th></tr></thead>
+        <tbody>${myRequests.map(r=>`<tr><td>${esc(r.to)}</td><td>${esc(r.q.slice(0,70))}${r.q.length>70?'…':''}</td>
+        <td><span class="tag info">${esc(r.status)}</span></td></tr>`).join('')}</tbody></table>`
+      : `<div class="empty" style="padding:26px"><span class="big">◌</span>还没有发起过咨询</div>` }`;
+
+  $('#btn-pause').onclick = ()=>{
+    p.ask = !p.ask;
+    toast(p.ask ? '已恢复接受咨询' : '已暂停接受咨询，立即生效，无需说明理由');
+    renderMe();
+  };
+  $('#btn-export').onclick = ()=>{
+    const data = JSON.stringify({
+      note: '正式版中，导出内容不含联系方式——因为平台没有在公开数据中存储它。',
+      profile: p
+    }, null, 2);
+    openDlg('导出我的数据',
+      `<pre style="background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:14px;overflow:auto;font-size:12.5px;max-height:300px">${esc(data)}</pre>`);
+  };
+  $('#btn-report').onclick = ()=>{
+    openDlg('举报通道', `
+      <div class="note warn">正式版中，举报由辅导员直接受理，<strong>不会向被举报人透露你的身份</strong>。</div>
+      <label class="f">举报对象</label><input type="text" id="rp-to" placeholder="对方署名">
+      <label class="f">情况说明</label><textarea id="rp-d" placeholder="请描述发生了什么"></textarea>
+      <div class="actions"><button class="btn primary" id="rp-send">提交举报</button></div>`);
+    $('#rp-send').onclick = ()=>{ $('#dlg').close(); toast('举报已提交（演示）'); };
+  };
+  $('#btn-delete').onclick = ()=>{
+    openDlg('确认撤回并删除？', `
+      <div class="note warn">正式版中，删除后你的经验内容将从经验库移除，联系方式一并清除，
+      此操作不可撤销，但可随时重新提交。</div>`,
+      '<button class="btn ghost" id="dlg-close">先不删</button><button class="btn danger" id="del-yes">确认删除</button>');
+    const c = $('#dlg-close'); if(c) c.onclick = ()=> $('#dlg').close();
+    $('#del-yes').onclick = ()=>{
+      DB.people = DB.people.filter(x => !x.mine);
+      ME = { uid:'me', name: ME ? ME.name : '', tier:'none' };
+      myRequests = [];
+      $('#dlg').close(); paintChip(); renderHome(); renderMe();
+      toast('已删除全部信息（演示）');
+    };
+  };
+}
+
+/* ---------- 启动 ---------- */
+(function boot(){
+  resetDB();
+  initFilters();
+  initJoin();
+  paintChip();
+  renderHome();
+
+  $('#q').addEventListener('input', renderBrowse);
+  $('#f-dest').addEventListener('change', renderBrowse);
+  $('#f-major').addEventListener('change', renderBrowse);
+  $('#f-open').addEventListener('change', renderBrowse);
+  $('#btn-reset').onclick = ()=>{
+    $('#q').value=''; $('#f-dest').value=''; $('#f-major').value=''; $('#f-open').value='';
+    renderBrowse();
+  };
+
+  go('login');
+})();
+</script>
+</body>
+</html>
