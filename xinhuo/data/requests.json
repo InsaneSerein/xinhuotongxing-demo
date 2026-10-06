@@ -1,0 +1,35 @@
+[
+  {
+    "id": "r_seed1",
+    "toUid": "2022001",
+    "toId": "u_seed1",
+    "fromUid": "2024001",
+    "fromName": "张某",
+    "fromMajor": "计算机科学与技术 2024级",
+    "question": "我是2024级计算机专业，想考XX大学，目前绩点3.6，想了解复试中项目经历该如何准备。",
+    "status": "待管理员转达",
+    "createdAt": "2026-10-05T14:55:37.779Z"
+  },
+  {
+    "id": "r_589d4def9704",
+    "toUid": "2022002",
+    "toId": "u_seed2",
+    "fromUid": "2024001",
+    "fromName": "学弟",
+    "fromMajor": "计算机 2024级",
+    "question": "第1次咨询测试",
+    "status": "待管理员转达",
+    "createdAt": "2026-10-06T14:56:30.550Z"
+  },
+  {
+    "id": "r_eca3c8a2d435",
+    "toUid": "2022002",
+    "toId": "u_seed2",
+    "fromUid": "2024001",
+    "fromName": "学弟",
+    "fromMajor": "计算机 2024级",
+    "question": "第2次咨询测试",
+    "status": "待管理员转达",
+    "createdAt": "2026-10-06T14:56:30.562Z"
+  }
+]

@@ -1,0 +1,16 @@
+{
+  "name": "xinhuo-tongxing",
+  "version": "1.0.0",
+  "private": true,
+  "description": "薪火同行 · 朋辈经验共享与互助平台（可部署 Web 版）",
+  "type": "commonjs",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node src/server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {}
+}

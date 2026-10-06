@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>薪火同行 · 朋辈经验共享与互助平台</title>
+<link rel="stylesheet" href="/app.css">
+</head>
+<body>
+
+<div class="banner-demo" id="banner" style="display:none">
+  <div class="wrap" id="banner-text"></div>
+</div>
+
+<header class="top">
+  <div class="wrap top-inner">
+    <div class="logo"><b>薪火同行</b><span>朋辈经验共享与互助平台</span></div>
+    <nav class="tabs" id="tabs">
+      <button data-view="home" class="on">首页</button>
+      <button data-view="browse">经验库</button>
+      <button data-view="join">我要参与</button>
+      <button data-view="ask">发起咨询</button>
+      <button data-view="me">我的</button>
+      <button data-view="admin" id="tab-admin" style="display:none">管理端</button>
+    </nav>
+    <div class="userchip" id="userchip"></div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- ===== 未登录：登录页 ===== -->
+  <section class="view" id="view-login">
+    <div class="loginbox">
+      <div class="card">
+        <h2 class="sec">登录</h2>
+        <p class="lead" id="login-lead">请使用学校统一身份认证登录。</p>
+        <div id="login-body"></div>
+      </div>
+      <div class="note plain">
+        <b>关于隐私</b>：本平台<strong>不收集手机号与微信号</strong>。需要联系时由管理员中转，
+        双方同意后才建立联系。你可以随时撤回全部信息。
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 首页 ===== -->
+  <section class="view on" id="view-home">
+    <div class="hero">
+      <h1>把你走过的路，留给正在走的人</h1>
+      <div class="sub">2022级毕业生经验沉淀 × 在校同学朋辈互助 · 毕业季启动</div>
+      <div class="note brand" style="margin-top:18px">
+        这不是一份「去向展示榜」，而是一张<strong>经验传承网络</strong>。
+        你可以选择只留下一句话，也可以分享完整经验——参与即可查看他人经验。
+      </div>
+      <div class="quote">“如果你愿意把经验留给后来的人，学院会把这份心意认真收好。”<em>—— 项目组</em></div>
+    </div>
+
+    <div class="grid g3">
+      <div class="card" style="margin:0">
+        <h2 class="sec"><span class="n">1</span>贡献后解锁</h2>
+        <p class="lead">提交你的信息即可查看全部参与者的经验内容。查看权限与贡献挂钩，避免单向索取。</p>
+      </div>
+      <div class="card" style="margin:0">
+        <h2 class="sec"><span class="n">2</span>联系方式不公开</h2>
+        <p class="lead">平台<strong>不收集</strong>手机号与微信号，咨询由管理员单向中转。</p>
+      </div>
+      <div class="card" style="margin:0">
+        <h2 class="sec"><span class="n">3</span>随时可退出</h2>
+        <p class="lead">可随时暂停接受咨询、撤回并删除全部数据，无需说明理由。</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="sec">当前参与情况</h2>
+      <div class="grid g3" style="margin-top:14px">
+        <div><div style="font-size:26px;font-weight:700;color:var(--brand)" id="stat-p">—</div><div class="hint" style="margin:0">已参与人数</div></div>
+        <div><div style="font-size:26px;font-weight:700;color:var(--brand)" id="stat-e">—</div><div class="hint" style="margin:0">经验条目</div></div>
+        <div><div style="font-size:26px;font-weight:700;color:var(--brand)" id="stat-h">—</div><div class="hint" style="margin:0">已完成对接</div></div>
+      </div>
+      <p class="hint">平台不公布任何按院校或单位排序的统计。</p>
+    </div>
+
+    <div class="card">
+      <h2 class="sec">三层权限一览</h2>
+      <table class="tbl">
+        <thead><tr><th style="width:110px">层级</th><th style="width:150px">对象</th><th>可见内容</th><th style="width:180px">获取条件</th></tr></thead>
+        <tbody>
+          <tr><td><span class="tag brand">贡献者</span></td><td>毕业年级同学</td><td>经验库全部内容<br>可发起联系请求</td><td>提交信息表 + 签署共享承诺</td></tr>
+          <tr><td><span class="tag info">同行者</span></td><td>在校低年级同学</td><td>经验库全部内容<br>可发起联系请求</td><td>同样提交信息表</td></tr>
+          <tr><td><span class="tag no">浏览者</span></td><td>未参与者</td><td>仅公开寄语（不含去向与联系方式）</td><td>登录后即可查看</td></tr>
+        </tbody>
+      </table>
+      <p class="hint">低年级同学也需要填写信息——这让关系从「单向索取」变成「双向同行」。</p>
+    </div>
+  </section>
+
+  <!-- ===== 经验库 ===== -->
+  <section class="view" id="view-browse">
+    <div class="card">
+      <h2 class="sec"><span class="n">2</span>经验库</h2>
+      <p class="lead">按专业方向、去向类型与目标院校检索。联系方式永不出现在列表中。</p>
+      <div class="note" id="tier-note" style="margin-top:16px"></div>
+      <div class="searchbar" style="margin-top:18px">
+        <div style="flex:2 1 220px"><label>关键词（专业 / 目标院校 / 行业 / 经验内容）</label><input type="text" id="q" placeholder="例如：计算机、复试、调剂"></div>
+        <div><label>去向类型</label><select id="f-dest"><option value="">不限</option></select></div>
+        <div><label>专业方向</label><select id="f-major"><option value="">不限</option></select></div>
+        <div><label>是否接受咨询</label><select id="f-open"><option value="">不限</option><option value="1">仅显示可咨询</option></select></div>
+        <div style="flex:0 0 auto"><button class="btn ghost" id="btn-reset">重置</button></div>
+      </div>
+      <div class="list" id="list"></div>
+      <div id="list-empty" class="empty" style="display:none"><span class="big">◌</span>没有符合条件的记录</div>
+    </div>
+  </section>
+
+  <!-- ===== 参与 ===== -->
+  <section class="view" id="view-join">
+    <div class="card">
+      <h2 class="sec"><span class="n">3</span>我要参与</h2>
+      <p class="lead">5 分钟内可完成。必填项只有 4 个，其余全部选填。</p>
+      <div class="note ok" style="margin-top:16px">
+        <b>提交后你将获得查看权限</b>，可查看经验库全部内容并申请咨询。
+        平台<strong>不会收集</strong>你的手机号或微信号。
+      </div>
+      <form id="join-form" autocomplete="off">
+        <label class="f">选择参与模式 <span class="req">必填</span></label>
+        <div class="radios" id="mode-radios">
+          <label class="radio on"><input type="radio" name="mode" value="full" checked>
+            <span><span class="t">完整共享</span><span class="d">分享去向、经验与寄语，愿意接受咨询（经中转）</span></span></label>
+          <label class="radio"><input type="radio" name="mode" value="msg">
+            <span><span class="t">仅留寄语</span><span class="d">只写一段想对学弟学妹说的话，不公开去向——<strong>同样计入贡献者，同样获得全部查看权限</strong></span></span></label>
+          <label class="radio"><input type="radio" name="mode" value="anon">
+            <span><span class="t">匿名投稿</span><span class="d">以匿名署名分享经验，联系方式由学院中转</span></span></label>
+        </div>
+
+        <label class="f" id="lb-name">姓名或署名 <span class="req">必填</span></label>
+        <input type="text" id="in-name" placeholder="真实姓名，或自定义署名">
+
+        <div class="grid g2">
+          <div><label class="f">年级 <span class="req">必填</span></label>
+            <select id="in-grade">
+              <option value="2022级">2022级（毕业年级）</option>
+              <option value="2023级">2023级</option>
+              <option value="2024级">2024级</option>
+              <option value="2025级">2025级</option>
+              <option value="其他">其他</option>
+            </select></div>
+          <div><label class="f">专业 <span class="req">必填</span></label><select id="in-major"></select></div>
+        </div>
+
+        <label class="f">去向类型 <span class="opt">仅「完整共享」必填</span></label>
+        <select id="in-dest"></select>
+        <p class="hint">即使完全不填去向，选择「仅留寄语」同样可以参与。</p>
+
+        <label class="f">具体院校 / 单位 <span class="opt">选填</span></label>
+        <input type="text" id="in-org" placeholder="可留空；不愿公开可填「暂不公开」">
+
+        <label class="f">经验内容 <span class="opt">选填，但很受欢迎</span></label>
+        <textarea id="in-exp" placeholder="例如：复试问到哪类问题、哪一步最关键、踩过哪些坑……"></textarea>
+
+        <label class="f">想对学弟学妹说的话 <span class="opt">选填</span></label>
+        <textarea id="in-msg" style="min-height:70px" placeholder="一句话也可以，例如：别怕慢，怕停。"></textarea>
+
+        <label class="f">联系方式 <span class="opt">选填，将单独加密保存</span></label>
+        <input type="text" id="in-contact" placeholder="仅在需要安排对接时由管理员读取">
+        <p class="hint">此项<strong>不会出现在经验库中</strong>，与公开数据分开加密存储，只有管理员在处理你同意的对接时才能读取，且每次读取都会记录审计日志。</p>
+
+        <label class="f">是否接受咨询 <span class="req">必填</span></label>
+        <div class="radios" id="ask-radios">
+          <label class="radio on"><input type="radio" name="ask" value="yes" checked>
+            <span><span class="t">接受，但请由学院中转</span><span class="d">学弟学妹提交问题，管理员转达给你，你的联系方式不暴露</span></span></label>
+          <label class="radio"><input type="radio" name="ask" value="no">
+            <span><span class="t">暂不接受咨询</span><span class="d">仅分享经验——不影响你查看他人经验</span></span></label>
+        </div>
+
+        <div class="grid g2" id="relay-opts">
+          <div><label class="f">可接受的咨询频次 <span class="opt">选填</span></label>
+            <select id="in-freq">
+              <option value="每学期不超过3次">每学期不超过3次</option>
+              <option value="每学期不超过5次" selected>每学期不超过5次</option>
+              <option value="每学期不超过10次">每学期不超过10次</option>
+            </select></div>
+          <div><label class="f">可接受的联系时段 <span class="opt">选填</span></label>
+            <select id="in-time">
+              <option value="仅工作日白天">仅工作日白天</option>
+              <option value="仅工作日晚上">仅工作日晚上</option>
+              <option value="周末">周末</option>
+              <option value="不接受深夜联系（22:00后）" selected>不接受深夜联系（22:00后）</option>
+            </select></div>
+        </div>
+
+        <label class="f">知情同意 <span class="req">必填</span></label>
+        <div class="checks">
+          <label class="check"><input type="checkbox" id="ck-1"><span>我已阅读并同意<b>《信息收集告知与授权书》</b>，信息仅用于本项目内的朋辈咨询与经验分享，不用于商业、评选或其他用途。</span></label>
+          <label class="check"><input type="checkbox" id="ck-2"><span>我知悉平台<b>不收集手机号与微信号</b>；咨询请求由管理员中转，我可随时暂停或退出。</span></label>
+          <label class="check"><input type="checkbox" id="ck-3"><span>我知悉信息默认保存至<b>毕业后 3 年</b>，到期自动清理；我可随时要求删除全部信息。</span></label>
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="btn primary">提交并获取查看权限</button>
+          <button type="button" class="btn ghost" id="btn-join-reset">清空重填</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ===== 咨询 ===== -->
+  <section class="view" id="view-ask">
+    <div class="card">
+      <h2 class="sec"><span class="n">4</span>发起咨询</h2>
+      <p class="lead">通过管理员单向中转，双方联系方式都不暴露，直到彼此都愿意。</p>
+      <div id="ask-body"></div>
+    </div>
+  </section>
+
+  <!-- ===== 我的 ===== -->
+  <section class="view" id="view-me">
+    <div class="card">
+      <h2 class="sec"><span class="n">5</span>我的</h2>
+      <div id="me-body"></div>
+    </div>
+  </section>
+
+  <!-- ===== 管理端 ===== -->
+  <section class="view" id="view-admin">
+    <div id="admin-body"></div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>薪火同行 · 朋辈经验共享与互助平台</span>
+    <span style="margin-left:auto">四条底线：不排名 · 不公开联系方式 · 贡献后解锁 · 随时可退出</span>
+  </div>
+</footer>
+
+<dialog id="dlg">
+  <div class="dlg-hd"><h3 id="dlg-title"></h3><button class="x" id="dlg-x">×</button></div>
+  <div class="dlg-bd" id="dlg-bd"></div>
+  <div class="dlg-ft" id="dlg-ft"></div>
+</dialog>
+<div class="toast" id="toast"></div>
+
+<script src="/app.js"></script>
+</body>
+</html>
